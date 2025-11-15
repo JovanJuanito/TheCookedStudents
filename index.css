@@ -24,7 +24,7 @@ section .wave {
     left: 0;
     width: 100%;
     height: 100px;
-    background-image: url("wave.png");
+    background-image: url("image/wave.png");
     background-size: 100% 100px;
     background-position: 0 0;
     animation: waving 40s linear infinite;
