@@ -1,6 +1,14 @@
+:root{
+    --menu-w: 20cm;
+    --menu-h: 10cm;
+    --menu-bg: rgba(255, 244, 179, 0.67);
+    --menu-border: 1px solid black;
+}
+
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -12,7 +20,7 @@ section {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,34 +32,93 @@ section .wave {
     left: 0;
     width: 100%;
     height: 100px;
-    background-image: url("image/wave.png");
+    background-image: url("image/wave.png"); /* adjust to "images/wave.png" if needed */
     background-size: 100% 100px;
     background-position: 0 0;
     animation: waving 40s linear infinite;
-    opacity: 0.50;
+    opacity: 0.5;
     z-index: 0;
 }
 
+/* menu table (card) */
 .menu_table {
-    width: 20cm;
-    height: 10cm;
+    width: var(--menu-w);
+    height: var(--menu-h);
     position: relative;
     z-index: 1;
-    margin: 10px auto ;
-    background: rgba(255, 244, 179, 0.67);
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid black;
     display: flex;
-/*  align-items: center;*/
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+/* header fills the top */
+.menu_header {
+    background: #000;
+    color: aliceblue;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu_header h1, .menu_header h2 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* body area below header */
+.menu_body {
+    background: var(--menu-bg);
+    padding: 1rem;
+    flex: 1 1 auto;
+    border: var(--menu-border);
+    border-top: none;
+}
+
+/* movable window styled like menu_table but 85% size */
+.movable_window {
+    width: calc(var(--menu-w) * 0.85);
+    height: calc(var(--menu-h) * 0.85);
+    position: fixed;
+    z-index: 2;
+    top: 50px;
+    left: 50px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    cursor: move;
+    background: transparent; /* visual provided by inner parts */
+}
+
+/* small variants inside movable window keep the same visuals but slightly smaller paddings */
+.movable_window .menu_header.small {
+    padding: 0.5rem 0.75rem;
+}
+.movable_window .menu_body.small {
+    padding: 0.75rem;
+    background: var(--menu-bg);
+    border: var(--menu-border);
+    border-top: none;
+    flex: 1 1 auto;
+}
+
+/* dragging state */
+.movable_window.dragging {
+    opacity: 0.95;
+}
+
+/* wave animation */
+.movable_window, .menu_table { z-index: 2; }
+
 @keyframes waving {
-    0% {
-        background-position-x: 0px;
-    }
-    100% {
-        background-position-x: 1000px;
-    }
+    0% { background-position-x: 0px; }
+    100% { background-position-x: 1000px; }
 }
