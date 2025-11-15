@@ -1,22 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" href="index.css" />
 </head>
 <body>
     <section>
         <div class="wave"></div>
-        <table class="menu_table">
-            <tr>
-                <td style="background-color: black;"> <h1 style="color: aliceblue;">What would you like</h1></td>
-            </tr>
-            <tr>
-                
-            </tr>
-        </table>
+
+        <div class="menu_table" role="region" aria-label="Main menu">
+            <div class="menu_header">
+                <h1>What would you like</h1>
+            </div>
+            <div class="menu_body">
+                <!-- menu content goes here -->
+            </div>
+        </div>
     </section>
+
+    <div class="movable_window" aria-label="Movable menu">
+        <div class="menu_header small">
+            <h2>What would you like</h2>
+        </div>
+        <div class="menu_body small">
+            Drag me around!
+        </div>
+    </div>
+
+    <script>
+        // run after DOM so element exists
+        const movableWindow = document.querySelector('.movable_window');
+        if (movableWindow) {
+            let offsetX = 0;
+            let offsetY = 0;
+            let isDragging = false;
+
+            movableWindow.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const r = movableWindow.getBoundingClientRect();
+                offsetX = e.clientX - r.left;
+                offsetY = e.clientY - r.top;
+                movableWindow.classList.add('dragging');
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    movableWindow.style.left = (e.clientX - offsetX) + 'px';
+                    movableWindow.style.top = (e.clientY - offsetY) + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                movableWindow.classList.remove('dragging');
+            });
+        }
+    </script>
 </body>
 </html>
