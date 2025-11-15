@@ -80,14 +80,13 @@ section .wave {
     border-top: none;
 }
 
-/* movable window styled like menu_table but 85% size */
 .movable_window {
-    width: calc(var(--menu-w) * 0.85);
-    height: calc(var(--menu-h) * 0.85);
+    width: calc(var(--menu-w) * 1.15);
+    height: calc(var(--menu-h) * 1.15);
     position: fixed;
     z-index: 2;
-    top: 50px;
-    left: 50px;
+    top: 15%;
+    left: 18%;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
