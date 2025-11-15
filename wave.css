@@ -1,32 +1,57 @@
-*{
-    height: 100%;
+* {
     margin: 0;
     padding: 0;
 }
-section{
+
+body {
+    height: 100vh;
+}
+
+section {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: blue;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-section .wave{
+section .wave {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 100px;
-    background-image: url("image/wave.png");
+    background-image: url("wave.png");
     background-size: 100% 100px;
-    animation: waving 30s linear infinite;
+    background-position: 0 0;
+    animation: waving 40s linear infinite;
+    opacity: 0.50;
+    z-index: 0;
 }
 
-@keyframes waving{
-    0%{
+.menu_table {
+    width: 20cm;
+    height: 10cm;
+    position: relative;
+    z-index: 1;
+    margin: 10px auto ;
+    background: rgba(255, 244, 179, 0.67);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid black;
+    display: flex;
+/*  align-items: center;*/
+    justify-content: center;
+}
+
+@keyframes waving {
+    0% {
         background-position-x: 0px;
     }
-    100%{
-        background-position-x: 1000px;;
+    100% {
+        background-position-x: 1000px;
     }
 }
