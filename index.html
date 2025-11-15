@@ -37,12 +37,13 @@
     <script>
         // run after DOM so element exists
         const movableWindow = document.querySelector('.movable_window');
+        const menu_header = movableWindow.querySelector('.menu_header.small');
         if (movableWindow) {
             let offsetX = 0;
             let offsetY = 0;
             let isDragging = false;
 
-            movableWindow.addEventListener('mousedown', (e) => {
+            menu_header.addEventListener('mousedown', (e) => {
                 isDragging = true;
                 const r = movableWindow.getBoundingClientRect();
                 offsetX = e.clientX - r.left;
@@ -50,10 +51,11 @@
                 movableWindow.classList.add('dragging');
             });
 
-            document.addEventListener('mousemove', (e) => {
+           document.addEventListener('mousemove', (e) => {
                 if (isDragging) {
-                    movableWindow.style.left = (e.clientX - offsetX) + 'px';
-                    movableWindow.style.top = (e.clientY - offsetY) + 'px';
+                    movableWindow.style.left = e.clientX - offsetX + 'px';
+                    movableWindow.style.top = e.clientY - offsetY + 'px';
+                    movableWindow.style.transform = 'none';
                 }
             });
 
