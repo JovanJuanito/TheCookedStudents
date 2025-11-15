@@ -9,10 +9,15 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
-body {
-    height: 100vh;
+body{
+    height: 100%;
+}
+
+html{
+    height: 100%;
 }
 
 section {
@@ -73,11 +78,39 @@ section .wave {
 
 /* body area below header */
 .menu_body {
+    display: flex;
     background: var(--menu-bg);
     padding: 1rem;
     flex: 1 1 auto;
     border: var(--menu-border);
     border-top: none;
+    padding: 0;
+    flex-direction:row;
+    flex-wrap: wrap;
+    justify-content: space-evenly ;
+    align-items: center;
+}
+
+.menu_body div{
+    display: flex;
+    flex-basis: 33%;
+    height: 40%;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu_body div img:hover{
+    cursor: pointer;
+    width: 150px;
+    height: 125px;
+}
+
+.menu_body div img{
+    width: 125px;
+    height: 100px;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 10px;
 }
 
 .movable_window {
