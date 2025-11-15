@@ -9,14 +9,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
 }
 
-body{
+body {
     height: 100%;
 }
-
-html{
+html {
     height: 100%;
 }
 
@@ -80,9 +78,14 @@ section .wave {
 .menu_body {
     display: flex;
     background: var(--menu-bg);
+    background: var(--menu-bg);
+    padding: 1rem;
     padding: 1rem;
     flex: 1 1 auto;
+    flex: 1 1 auto;
     border: var(--menu-border);
+    border: var(--menu-border);
+    border-top: none;
     border-top: none;
     padding: 0;
     flex-direction:row;
@@ -90,7 +93,6 @@ section .wave {
     justify-content: space-evenly ;
     align-items: center;
 }
-
 .menu_body div{
     display: flex;
     flex-basis: 33%;
@@ -98,13 +100,11 @@ section .wave {
     align-items: center;
     justify-content: center;
 }
-
 .menu_body div img:hover{
     cursor: pointer;
     width: 150px;
     height: 125px;
 }
-
 .menu_body div img{
     width: 125px;
     height: 100px;
@@ -112,14 +112,15 @@ section .wave {
     border-radius: 20px;
     padding: 10px;
 }
-
 .movable_window {
     width: calc(var(--menu-w) * 1.15);
     height: calc(var(--menu-h) * 1.15);
     position: fixed;
     z-index: 2;
-    top: 15%;
-    left: 18%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -133,6 +134,15 @@ section .wave {
 /* small variants inside movable window keep the same visuals but slightly smaller paddings */
 .movable_window .menu_header.small {
     padding: 0.5rem 0.75rem;
+    justify-content: center;
+}
+
+
+.movable_window .menu_header.small span{
+    color: orange;
+    font-size: larger;
+    font-weight: bolder;
+
 }
 .movable_window .menu_body.small {
     padding: 0.75rem;
