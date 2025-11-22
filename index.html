@@ -15,12 +15,12 @@
                 <h1>What would you like</h1>
             </div>
             <div class="menu_body">
-                <div class="menu1"><image src="image/wave.png"></image></div>
-                <div class="menu2"><image src="image/wave.png"></image></div>
-                <div class="menu3"><image src="image/wave.png"></image></div>
-                <div class="menu4"><image src="image/wave.png"></image></div>
-                <div class="menu5"><image src="image/wave.png"></image></div>
-                <div class="menu6"><image src="image/wave.png"></image></div>
+                <div class="menu1"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu2"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu3"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu4"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu5"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu6"><img src="image/wave.png" alt="wave" /></div>
             </div>
         </div>
     </section>
@@ -28,30 +28,63 @@
     <div class="movable_window" aria-label="Movable menu">
         <div class="menu_header small">
             <h2>.<span>L</span>ogin</h2>
-        </div>
+        </div>  
         <div class="menu_body small">
-            <!-- the login json    -->
+            <!-- the login json -->
+            <div class="login">
+                <input type="text" placeholder="Username" id="username_id" />
+                <input type="button" value="Start" id="start_button" />
+            </div>
         </div>
     </div>
 
     <script>
-        // run after DOM so element exists
+        // login + save to backend
+        const startBtn = document.getElementById('start_button');
+        const usernameInput = document.getElementById('username_id');
+
+        if (!startBtn || !usernameInput) {
+            console.error("Missing start button or username input");
+        } else {
+            startBtn.addEventListener('click', async () => {
+                const username = usernameInput.value.trim();
+                const Time = new Date().toLocaleString();
+                console.log(`Username: ${username}, Time: ${Time}`);
+
+                try {
+                    const res = await fetch("http://localhost:5000/save", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+                    console.log("Saved:", data);
+                } catch (err) {
+                    console.error("Save failed:", err);
+                }
+            });
+        }
+
+        // make movable window draggable (safe checks)
         const movableWindow = document.querySelector('.movable_window');
-        const menu_header = movableWindow.querySelector('.menu_header.small');
         if (movableWindow) {
+            const menu_header = movableWindow.querySelector('.menu_header.small');
             let offsetX = 0;
             let offsetY = 0;
             let isDragging = false;
 
-            menu_header.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                const r = movableWindow.getBoundingClientRect();
-                offsetX = e.clientX - r.left;
-                offsetY = e.clientY - r.top;
-                movableWindow.classList.add('dragging');
-            });
+            if (menu_header) {
+                menu_header.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    const r = movableWindow.getBoundingClientRect();
+                    offsetX = e.clientX - r.left;
+                    offsetY = e.clientY - r.top;
+                    movableWindow.classList.add('dragging');
+                });
+            }
 
-           document.addEventListener('mousemove', (e) => {
+            document.addEventListener('mousemove', (e) => {
                 if (isDragging) {
                     movableWindow.style.left = e.clientX - offsetX + 'px';
                     movableWindow.style.top = e.clientY - offsetY + 'px';
