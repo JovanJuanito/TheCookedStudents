@@ -38,7 +38,7 @@ section .wave {
     background-image: url("image/wave.png"); /* adjust to "images/wave.png" if needed */
     background-size: 100% 100px;
     background-position: 0 0;
-    animation: waving 40s linear infinite;
+    animation: waving 30s linear infinite;
     opacity: 0.5;
     z-index: 0;
 }
@@ -137,25 +137,73 @@ section .wave {
     justify-content: center;
 }
 
-
+.movable_window .menu_body.small {
+    display: flex;
+    align-items: center;    /* vertical center */
+    justify-content: center; /* horizontal center */
+    padding: 16px;
+    box-sizing: border-box;
+}
 .movable_window .menu_header.small span{
     color: orange;
     font-size: larger;
     font-weight: bolder;
 
 }
-.movable_window .menu_body.small {
-    padding: 0.75rem;
-    background: var(--menu-bg);
-    border: var(--menu-border);
-    border-top: none;
-    flex: 1 1 auto;
-}
+/*the log in console*/
+.movable_window .menu_body.small .login {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+            width: 100%;
+            max-width: 320px;
+        }
 
-/* dragging state */
-.movable_window.dragging {
-    opacity: 0.95;
-}
+        .movable_window .menu_body.small .login input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+            background: #fafafa;
+        }
+
+        .movable_window .menu_body.small .login input[type="text"]:focus {
+            border-color: #f400e0;
+            
+        }
+
+        .movable_window .menu_body.small .login input[type="button"] {
+            width: 100%;
+            padding: 14px;
+            background: rgb(255, 0, 195);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .movable_window .menu_body.small .login input[type="button"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .movable_window .menu_body.small .login input[type="button"]:active {
+            transform: translateY(0);
+        }/*end of*/
+
+        /* dragging state */
+        .movable_window.dragging {
+            opacity: 0.95;
+            cursor: grabbing;
+        }
 
 /* wave animation */
 .movable_window, .menu_table { z-index: 2; }
