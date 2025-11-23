@@ -1,0 +1,7 @@
+deno run --allow-net --allow-read --allow-write server.ts
+
+/*use this in terminal to see
+but must download deno in powershell admin
+if download use this bash*/
+
+irm https://deno.land/install.ps1 | iex
