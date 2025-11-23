@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" href="index.css" />
+
 </head>
 <body>
     <section>
@@ -61,10 +62,13 @@
                     const data = await res.json();
                     console.log("Saved:", data);
                     
-                    // Hide the entire movable window
+                    // Animate and hide the movable window
                     const movableWindow = document.querySelector('.movable_window');
                     if (movableWindow) {
-                        movableWindow.style.display = 'none';
+                        movableWindow.classList.add('minimize');
+                        setTimeout(() => {
+                            movableWindow.style.display = 'none';
+                        }, 300);
                     }
                     
                 } catch (err) {
