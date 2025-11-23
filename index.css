@@ -120,7 +120,7 @@ section .wave {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
+    
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -129,7 +129,12 @@ section .wave {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     cursor: move;
     background: transparent; /* visual provided by inner parts */
+    transition: transform 0.3s ease, opacity 0.3s ease;/*animation*/
 }
+.movable_window.minimize {
+            transform: scale(0) translate(-50%, -50%);
+            opacity: 0;
+        }
 
 /* small variants inside movable window keep the same visuals but slightly smaller paddings */
 .movable_window .menu_header.small {
