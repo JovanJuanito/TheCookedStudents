@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../image/kitchenwstove.png");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  font-family: sans-serif;
+  cursor: url("../image/pointer.png"),auto;
+}
+
+/* Draggable utensil */
+.utensils {
+  width: 15vw;   /* scales with screen width */
+  height: 15vw;
+  position: absolute;
+  left: 5vw;
+  top: 20vh;
+  cursor: url("../image/grab.png"),auto;
+  z-index: 1;
+}
+
+.utensils img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none; /* allow dragging the parent div */
+}
+
+.done {
+    position: absolute;
+    width: 15vw;  
+    height: 15vw;
+    pointer-events: none;
+}
+
+.done img{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#dropzone {
+    width: 180px;
+    height: 180px;
+    position: absolute;
+    left: 35vh;
+    top: 42vh;
+    background-color: rgba(255,255,255,0.8);
+    border: 2px dashed gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
