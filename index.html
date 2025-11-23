@@ -5,22 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" href="index.css" />
-
 </head>
 <body>
+
+    <img src="image/cip.gif" class="cute_thing" id="cute_thing">
+    <audio id="koi_audio" src="image/Koi.MP3" loop></audio>
+
     <section>
         <div class="wave"></div>
 
         <div class="menu_table" role="region" aria-label="Main menu">
             <div class="menu_header">
-                <h1>What would you like to make today!</h1>
+                <h1>What would you like</h1>
             </div>
+            <div class="menu_body">
+                		
             <div class="menu_body">
                 <div class="menu1"><a href="menu1/menu1.html"><img src="image/frying_pan_fried_rice.png" alt="wave" /></a></div>
                 <div class="menu2"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
+                <div class="menu1"><img src="image/wave.png" alt="wave" /></div>
+                <div class="menu2"><img src="image/wave.png" alt="wave" /></div>
                 <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
+                <div class="menu3"><img src="image/wave.png" alt="wave" /></div>
                 <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
+                <div class="menu4"><img src="image/wave.png" alt="wave" /></div>
                 <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
+                <div class="menu5"><img src="image/wave.png" alt="wave" /></div>
                 <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
             </div>
         </div>
@@ -40,6 +50,28 @@
     </div>
 
     <script>
+        // Toggle gif and audio on cute_thing click
+        const cuteThing = document.getElementById('cute_thing');
+        const koiAudio = document.getElementById('koi_audio');
+        let isPlaying = false;
+
+        if (cuteThing && koiAudio) {
+            cuteThing.addEventListener('click', () => {
+                if (isPlaying) {
+                    // Stop audio
+                    koiAudio.pause();
+                    koiAudio.currentTime = 0;
+                    isPlaying = false;
+                    console.log('Stopped');
+                } else {
+                    // Play audio
+                    koiAudio.play();
+                    isPlaying = true;
+                    console.log('Playing');
+                }
+            });
+        }
+
         // login + save to backend
         const startBtn = document.getElementById('start_button');
         const usernameInput = document.getElementById('username_id');
