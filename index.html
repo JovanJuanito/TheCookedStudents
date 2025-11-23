@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <img src="image/cip.gif" class="cute_thing" id="cute_thing">
+    <img src="image/cip.gif" class="cute_thing" id="cute_thing" alt="Cute character">
     <audio id="koi_audio" src="sounds/Koi.MP3" loop></audio>
 
     <section>
@@ -19,17 +19,17 @@
                 <h1>What would you like</h1>
             </div>
             <div class="menu_body">
-                <div class="menu1"><a href="menu1/menu1.html"><img src="image/frying_pan_fried_rice.png" alt="wave" /></a></div>
-                <div class="menu2"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
-                <div class="menu1"><img src="image/wave.png" alt="wave" /></div>
-                <div class="menu2"><img src="image/wave.png" alt="wave" /></div>
-                <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
-                <div class="menu3"><img src="image/wave.png" alt="wave" /></div>
-                <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
-                <div class="menu4"><img src="image/wave.png" alt="wave" /></div>
-                <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
-                <div class="menu5"><img src="image/wave.png" alt="wave" /></div>
-                <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="wave" /></a></div>
+                <div class="menu1"><a href="menu1/menu1.html"><img src="image/frying_pan_fried_rice.png" alt="Fried Rice" /></a></div>
+                <div class="menu2"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 2" /></a></div>
+                <div class="menu1"><img src="image/wave.png" alt="Menu 3" /></div>
+                <div class="menu2"><img src="image/wave.png" alt="Menu 4" /></div>
+                <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 5" /></a></div>
+                <div class="menu3"><img src="image/wave.png" alt="Menu 6" /></div>
+                <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 7" /></a></div>
+                <div class="menu4"><img src="image/wave.png" alt="Menu 8" /></div>
+                <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 9" /></a></div>
+                <div class="menu5"><img src="image/wave.png" alt="Menu 10" /></div>
+                <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 11" /></a></div>
             </div>
         </div>
     </section>
@@ -39,7 +39,6 @@
             <h2>.<span>L</span>ogin</h2>
         </div>  
         <div class="menu_body small">
-            <!-- the login json -->
             <div class="login">
                 <input type="text" placeholder="Username" id="username_id" />
                 <input type="button" value="Start" id="start_button" />
@@ -56,13 +55,11 @@
         if (cuteThing && koiAudio) {
             cuteThing.addEventListener('click', () => {
                 if (isPlaying) {
-                    // Stop audio
                     koiAudio.pause();
                     koiAudio.currentTime = 0;
                     isPlaying = false;
                     console.log('Stopped');
                 } else {
-                    // Play audio
                     koiAudio.play();
                     isPlaying = true;
                     console.log('Playing');
@@ -92,7 +89,6 @@
                     const data = await res.json();
                     console.log("Saved:", data);
                     
-                    // Animate and hide the movable window
                     const movableWindow = document.querySelector('.movable_window');
                     if (movableWindow) {
                         movableWindow.classList.add('minimize');
@@ -107,7 +103,7 @@
             });
         }
 
-        // make movable window draggable (safe checks)
+        // make movable window draggable
         const movableWindow = document.querySelector('.movable_window');
         if (movableWindow) {
             const menu_header = movableWindow.querySelector('.menu_header.small');
