@@ -17,6 +17,14 @@ body {
 html {
     height: 100%;
 }
+.cute_thing{
+    position: fixed;
+    width: 150px;
+    height: 150px;
+    bottom: 20px;
+    right: 20px;
+    z-index: 3;
+}
 
 section {
     position: relative;
