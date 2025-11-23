@@ -60,6 +60,13 @@
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     const data = await res.json();
                     console.log("Saved:", data);
+                    
+                    // Hide the entire movable window
+                    const movableWindow = document.querySelector('.movable_window');
+                    if (movableWindow) {
+                        movableWindow.style.display = 'none';
+                    }
+                    
                 } catch (err) {
                     console.error("Save failed:", err);
                 }
