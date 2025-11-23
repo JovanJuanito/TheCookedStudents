@@ -1,165 +1,165 @@
-:root{
-    --menu-w: 20cm;
-    --menu-h: 10cm;
-    --menu-bg: rgba(255, 244, 179, 0.67);
-    --menu-border: 1px solid black;
-}
+        :root{
+            --menu-w: 20cm;
+            --menu-h: 10cm;
+            --menu-bg: rgba(255, 244, 179, 0.67);
+            --menu-border: 1px solid black;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    height: 100%;
-}
-html {
-    height: 100%;
-}
-.cute_thing{
-    position: fixed;
-    width: 150px;
-    height: 150px;
-    bottom: 20px;
-    right: 20px;
-    z-index: 3;
-}
+        body, html {
+            height: 100%;
+        }
 
-section {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .cute_thing{
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3;
+            cursor: pointer;
+        }
 
-section .wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background-image: url("image/wave.png"); /* adjust to "images/wave.png" if needed */
-    background-size: 100% 100px;
-    background-position: 0 0;
-    animation: waving 30s linear infinite;
-    opacity: 0.5;
-    z-index: 0;
-}
+        section {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* menu table (card) */
-.menu_table {
-    width: var(--menu-w);
-    height: var(--menu-h);
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 10px auto;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
+        section .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-image: url("image/wave.png");
+            background-size: 100% 100px;
+            background-position: 0 0;
+            animation: waving 30s linear infinite;
+            opacity: 0.5;
+            z-index: 0;
+        }
 
-/* header fills the top */
-.menu_header {
-    background: #000;
-    color: aliceblue;
-    padding: 0.75rem 1rem;
-    width: 100%;
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.menu_header h1, .menu_header h2 {
-    margin: 0;
-    font-weight: 600;
-}
+        .menu_table {
+            width: var(--menu-w);
+            height: var(--menu-h);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
 
-/* body area below header */
-.menu_body {
-    display: flex;
-    background: var(--menu-bg);
-    padding: 1rem;
-    flex: 1 1 auto;
-    border: var(--menu-border);
-    border-top: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;
-}
-.menu_body div{
-    display: flex;
-    flex-basis: 33%;
-    height: 40%;
-    align-items: center;
-    justify-content: center;
-}
-.menu_body div img:hover{
-    cursor: pointer;
-    width: 150px;
-    height: 125px;
-}
-.menu_body div img{
-    width: 125px;
-    height: 100px;
-    border: 1px solid;
-    border-radius: 20px;
-    padding: 10px;
-}
-.movable_window {
-    width: calc(var(--menu-w) * 1.15);
-    height: calc(var(--menu-h) * 1.15);
-    position: fixed;
-    z-index: 2;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    cursor: move;
-    background: transparent; /* visual provided by inner parts */
-    transition: transform 0.3s ease, opacity 0.3s ease;/*animation*/
-}
-.movable_window.minimize {
+        .menu_header {
+            background: #000;
+            color: aliceblue;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .menu_header h1, .menu_header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .menu_body {
+            display: flex;
+            background: var(--menu-bg);
+            padding: 1rem;
+            flex: 1 1 auto;
+            border: var(--menu-border);
+            border-top: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .menu_body > div {
+            display: flex;
+            flex-basis: 33%;
+            height: 40%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu_body div img {
+            width: 125px;
+            height: 100px;
+            border: 1px solid;
+            border-radius: 20px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .menu_body div img:hover {
+            cursor: pointer;
+            width: 150px;
+            height: 125px;
+        }
+
+        .movable_window {
+            width: calc(var(--menu-w) * 1.15);
+            height: calc(var(--menu-h) * 1.15);
+            position: fixed;
+            z-index: 2;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: move;
+            background: transparent;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .movable_window.minimize {
             transform: scale(0) translate(-50%, -50%);
             opacity: 0;
         }
 
-/* small variants inside movable window keep the same visuals but slightly smaller paddings */
-.movable_window .menu_header.small {
-    padding: 0.5rem 0.75rem;
-    justify-content: center;
-    cursor: move;
-}
+        .movable_window .menu_header.small {
+            padding: 0.5rem 0.75rem;
+            justify-content: center;
+        }
 
-.movable_window .menu_body.small {
-    display: flex;
-    align-items: center;    /* vertical center */
-    justify-content: center; /* horizontal center */
-    padding: 16px;
-    box-sizing: border-box;
-}
-.movable_window .menu_header.small span{
-    color: orange;
-    font-size: larger;
-    font-weight: bolder;
+        .movable_window .menu_header.small span {
+            color: orange;
+            font-size: larger;
+            font-weight: bolder;
+        }
 
-}
-/*the log in console*/
-.movable_window .menu_body.small .login {
+        .movable_window .menu_body.small {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .movable_window .menu_body.small .login {
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -182,7 +182,6 @@ section .wave {
 
         .movable_window .menu_body.small .login input[type="text"]:focus {
             border-color: #f400e0;
-            
         }
 
         .movable_window .menu_body.small .login input[type="button"] {
@@ -196,6 +195,7 @@ section .wave {
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.2s ease;
         }
 
         .movable_window .menu_body.small .login input[type="button"]:hover {
@@ -205,18 +205,14 @@ section .wave {
 
         .movable_window .menu_body.small .login input[type="button"]:active {
             transform: translateY(0);
-        }/*end of*/
+        }
 
-        /* dragging state */
         .movable_window.dragging {
             opacity: 0.95;
             cursor: grabbing;
         }
 
-/* wave animation */
-.movable_window, .menu_table { z-index: 2; }
-
-@keyframes waving {
-    0% { background-position-x: 0px; }
-    100% { background-position-x: 1000px; }
-}
+        @keyframes waving {
+            0% { background-position-x: 0px; }
+            100% { background-position-x: 1000px; }
+        }
