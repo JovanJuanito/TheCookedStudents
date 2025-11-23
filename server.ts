@@ -43,21 +43,34 @@ async function handler(req: Request): Promise<Response> {
       const fileContent = await Deno.readTextFile(JSON_FILE);
       const userData = JSON.parse(fileContent);
 
-      // Add new login
+      // Check if username already exists
+      const existingIndex = userData.findIndex(
+        (user: any) => user.username === username
+      );
+
       const newEntry = {
         username,
         time: new Date().toLocaleString()
       };
-      userData.push(newEntry);
+
+      if (existingIndex !== -1) {
+        // Update existing user's time
+        userData[existingIndex] = newEntry;
+        console.log("✓ Updated:", newEntry);
+      } else {
+        // Add new user
+        userData.push(newEntry);
+        console.log("✓ Added:", newEntry);
+      }
 
       // Save back to file
       await Deno.writeTextFile(JSON_FILE, JSON.stringify(userData, null, 2));
       
-      console.log("✓ Saved:", newEntry);
       return new Response(JSON.stringify({ 
         status: "OK", 
         saved: true,
-        data: newEntry 
+        data: newEntry,
+        updated: existingIndex !== -1
       }), { headers });
       
     } catch (err) {
