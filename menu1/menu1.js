@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    let date = new Date();
+    let timer = date.getTime();
     const recipe = ["frying_pan","oil" ,"diced_onion", "egg", "rice" ,"soy_sauce" ,"salt","spoon","plate","done"];
     const action = ["utensil", "ingredient", "ingredient","ingredient","ingredient","ingredient","ingredient","act","utensil"];
     const pan_stage = ["frying_pan","frying_pan_oil","frying_pan_onion","frying_pan_egg","frying_pan_rice","frying_pan_soy_sauce","frying_pan_soy_sauce","frying_pan_fried_rice"];
@@ -105,7 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
             snapToDrop(dragging, dropZone);
             setTimeout(() => {
                 dropZone.innerHTML = `
-                    <h1>Congratulations!! Stage Complete!!</h1>
+                    <h1>Stage Complete!!</h1>
+                    <h2>Completion time: `+ (new Date().getTime() - timer)/1000+`</h2>
                     <a href="../index.html">
                         <button type="button">Press to go back to main page</button>
                     </a>`;
@@ -121,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
             snapToDrop(dragging, dropZone);
             if(action[counter++] == "utensil"){
                 if(recipe[counter] == "done"){
-                    dropZone.setAttribute("style", "left : 15vh; top : 15vh; width : 80% ; height : 80% ; border-radius: 15px");
+                    dropZone.setAttribute("style", "left : 15vh; top : 15vh; width : 80% ; height : 80% ; border-radius: 15px; display : flex; flex-direction: column;");
                     dropZone.innerHTML = "Serve";
                     dragging.style.pointerEvents = "none";
                     active_utensil.innerHTML ="";
