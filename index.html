@@ -46,94 +46,96 @@
         </div>
     </div>
 
-    <script>
-        // Toggle gif and audio on cute_thing click
-        const cuteThing = document.getElementById('cute_thing');
-        const koiAudio = document.getElementById('koi_audio');
-        let isPlaying = false;
+<script>
+    // Toggle gif and audio on cute_thing click
+    const cuteThing = document.getElementById('cute_thing');
+    const koiAudio = document.getElementById('koi_audio');
+    let isPlaying = false;
 
-        if (cuteThing && koiAudio) {
-            cuteThing.addEventListener('click', () => {
-                if (isPlaying) {
-                    koiAudio.pause();
-                    koiAudio.currentTime = 0;
-                    isPlaying = false;
-                    console.log('Stopped');
-                } else {
-                    koiAudio.play();
-                    isPlaying = true;
-                    console.log('Playing');
-                }
-            });
-        }
+    if (cuteThing && koiAudio) {
+        cuteThing.addEventListener('click', () => {
+            if (isPlaying) {
+                koiAudio.pause();
+                koiAudio.currentTime = 0;
+                isPlaying = false;
+            } else {
+                koiAudio.play().catch(err => console.warn(err));
+                isPlaying = true;
+            }
+        });
+    }
 
-        // login + save to backend
-        const startBtn = document.getElementById('start_button');
-        const usernameInput = document.getElementById('username_id');
+    // login + save to backend
+    const startBtn = document.getElementById('start_button');
+    const usernameInput = document.getElementById('username_id');
+    const movableWindow = document.querySelector('.movable_window');
 
-        if (!startBtn || !usernameInput) {
-            console.error("Missing start button or username input");
-        } else {
-            startBtn.addEventListener('click', async () => {
-                const username = usernameInput.value.trim();
-                const Time = new Date().toLocaleString();
-                console.log(`Username: ${username}, Time: ${Time}`);
+    if (!startBtn || !usernameInput) {
+        console.error("Missing start button or username input");
+    } else {
+        startBtn.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
+            const Time = new Date().toLocaleString();
+            console.log(`Username: ${username}, Time: ${Time}`);
 
-                try {
-                    const res = await fetch("http://localhost:8000/login", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ username })
-                    });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    const data = await res.json();
-                    console.log("Saved:", data);
-                    
-                    const movableWindow = document.querySelector('.movable_window');
-                    if (movableWindow) {
-                        movableWindow.classList.add('minimize');
-                        setTimeout(() => {
-                            movableWindow.style.display = 'none';
-                        }, 300);
-                    }
-                    
-                } catch (err) {
-                    console.error("Save failed:", err);
-                }
-            });
-        }
+            // Fade out window immediately
+            if (movableWindow) {
+                movableWindow.style.transition = "opacity 0.3s ease";
+                movableWindow.style.opacity = "0";
 
-        // make movable window draggable
-        const movableWindow = document.querySelector('.movable_window');
-        if (movableWindow) {
-            const menu_header = movableWindow.querySelector('.menu_header.small');
-            let offsetX = 0;
-            let offsetY = 0;
-            let isDragging = false;
-
-            if (menu_header) {
-                menu_header.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    const r = movableWindow.getBoundingClientRect();
-                    offsetX = e.clientX - r.left;
-                    offsetY = e.clientY - r.top;
-                    movableWindow.classList.add('dragging');
-                });
+                setTimeout(() => {
+                    movableWindow.style.display = 'none';
+                }, 300);
             }
 
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    movableWindow.style.left = e.clientX - offsetX + 'px';
-                    movableWindow.style.top = e.clientY - offsetY + 'px';
-                    movableWindow.style.transform = 'none';
-                }
-            });
+            // Backend request (non-blocking)
+            try {
+                const res = await fetch("http://localhost:8000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username })
+                });
 
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-                movableWindow.classList.remove('dragging');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                console.log("Saved:", data);
+
+            } catch (err) {
+                console.error("Save failed:", err);
+            }
+        });
+    }
+
+    // make movable window draggable
+    if (movableWindow) {
+        const menu_header = movableWindow.querySelector('.menu_header.small');
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+
+        if (menu_header) {
+            menu_header.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const r = movableWindow.getBoundingClientRect();
+                offsetX = e.clientX - r.left;
+                offsetY = e.clientY - r.top;
+                movableWindow.classList.add('dragging');
             });
         }
-    </script>
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                movableWindow.style.left = e.clientX - offsetX + 'px';
+                movableWindow.style.top = e.clientY - offsetY + 'px';
+                movableWindow.style.transform = 'none';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            movableWindow.classList.remove('dragging');
+        });
+    }
+</script>
 </body>
 </html>
