@@ -1,3 +1,4 @@
+// server.ts
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 const JSON_FILE = "./userLogin.json";
@@ -10,117 +11,107 @@ try {
   console.log("✓ Created userLogin.json");
 }
 
+// Helper: Get MIME type based on file extension
+function getContentType(path: string): string {
+  if (path.endsWith(".html")) return "text/html";
+  if (path.endsWith(".css")) return "text/css";
+  if (path.endsWith(".js")) return "application/javascript";
+  if (path.endsWith(".png")) return "image/png";
+  if (path.endsWith(".gif")) return "image/gif";
+  if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
+  if (path.endsWith(".mp3")) return "audio/mpeg";
+  if (path.endsWith(".json")) return "application/json";
+  return "application/octet-stream";
+}
+
 async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
-  
+
   // CORS headers
-  const headers = {
+  const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json",
   };
 
-  // Handle OPTIONS (preflight)
+  // Handle preflight OPTIONS request
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers });
+    return new Response(null, { headers: corsHeaders });
   }
 
-  // POST - Save to JSON file
+  // POST /login — save or update user login
   if (url.pathname === "/login" && req.method === "POST") {
     try {
       const body = await req.json();
-      const username = body.username?.trim();
-      
+      const username = typeof body.username === "string" ? body.username.trim() : "";
+
       if (!username) {
-        return new Response(JSON.stringify({ error: "Username required" }), { 
-          status: 400, 
-          headers 
+        return new Response(JSON.stringify({ error: "Username required" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      // Read existing data
+      // Read existing logins
       const fileContent = await Deno.readTextFile(JSON_FILE);
-      const userData = JSON.parse(fileContent);
-
-      // Check if username already exists
-      const existingIndex = userData.findIndex(
-        (user: any) => user.username === username
-      );
+      const userData: Array<{ username: string; time: string }> = JSON.parse(fileContent);
 
       const newEntry = {
         username,
-        time: new Date().toLocaleString()
+        time: new Date().toLocaleString(),
       };
 
+      // Check if user exists
+      const existingIndex = userData.findIndex((user) => user.username === username);
+
       if (existingIndex !== -1) {
-        // Update existing user's time
-        userData[existingIndex] = newEntry;
+        userData[existingIndex] = newEntry; // update timestamp
         console.log("✓ Updated:", newEntry);
       } else {
-        // Add new user
-        userData.push(newEntry);
+        userData.push(newEntry); // add new user
         console.log("✓ Added:", newEntry);
       }
 
-      // Save back to file
+      // Write back
       await Deno.writeTextFile(JSON_FILE, JSON.stringify(userData, null, 2));
-      
-      return new Response(JSON.stringify({ 
-        status: "OK", 
-        saved: true,
-        data: newEntry,
-        updated: existingIndex !== -1
-      }), { headers });
-      
+
+      return new Response(
+        JSON.stringify({
+          status: "OK",
+          saved: true,
+          data: newEntry,
+          updated: existingIndex !== -1,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     } catch (err) {
-      console.error("✗ Error:", err);
-      return new Response(JSON.stringify({ error: "Failed to save" }), { 
-        status: 500, 
-        headers 
+      console.error("✗ Login error:", err);
+      return new Response(JSON.stringify({ error: "Failed to process login" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
   }
 
-  // Serve HTML file
-  if (url.pathname === "/" || url.pathname === "/index.html") {
-    try {
-      const html = await Deno.readTextFile("./index.html");
-      return new Response(html, {
-        headers: { "Content-Type": "text/html" }
-      });
-    } catch {
-      return new Response("index.html not found", { status: 404 });
-    }
-  }
+  // Serve static files
+  const filePath = url.pathname === "/" ? "./index.html" : `.${url.pathname}`;
 
-  // Serve CSS file
-  if (url.pathname === "/index.css") {
-    try {
-      const css = await Deno.readTextFile("./index.css");
-      return new Response(css, {
-        headers: { "Content-Type": "text/css" }
-      });
-    } catch {
-      return new Response("index.css not found", { status: 404 });
+  try {
+    const fileBytes = await Deno.readFile(filePath);
+    const contentType = getContentType(filePath);
+    return new Response(fileBytes, {
+      headers: { "Content-Type": contentType },
+    });
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) {
+      return new Response("404 Not Found", { status: 404 });
     }
+    console.error("File read error:", err);
+    return new Response("500 Internal Server Error", { status: 500 });
   }
-
-  // Serve images
-  if (url.pathname.startsWith("/image/")) {
-    try {
-      const imagePath = `.${url.pathname}`;
-      const imageData = await Deno.readFile(imagePath);
-      return new Response(imageData, {
-        headers: { "Content-Type": "image/png" }
-      });
-    } catch {
-      return new Response("Image not found", { status: 404 });
-    }
-  }
-
-  return new Response("Not Found", { status: 404 });
 }
 
 console.log("🦕 Deno server running on http://localhost:8000");
-serve(handler, { port: 8000 });
+await serve(handler, { port: 8000 });
