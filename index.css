@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: url("image/pointer.png"),auto;
         }
 
         body, html {
@@ -22,7 +23,7 @@
             bottom: 20px;
             right: 20px;
             z-index: 3;
-            cursor: pointer;
+            cursor: url("image/grab.png"),auto;
         }
 
         section {
@@ -111,7 +112,7 @@
         }
 
         .menu_body div img:hover {
-            cursor: pointer;
+            cursor: url("image/grab.png"),auto;
             width: 150px;
             height: 125px;
         }
@@ -193,7 +194,7 @@
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
+            cursor: url("image/grab.png"),auto;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
             transition: all 0.2s ease;
         }
