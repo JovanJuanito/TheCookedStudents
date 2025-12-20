@@ -5,10 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const action = ["utensil", "ingredient", "ingredient","ingredient","ingredient","ingredient","ingredient","act","utensil"];
     const pan_stage = ["frying_pan","frying_pan_oil","frying_pan_onion","frying_pan_egg","frying_pan_rice","frying_pan_soy_sauce","frying_pan_soy_sauce","frying_pan_fried_rice"];
 
-
     let stage = 0;
     let counter = 0;
-    const dropZone = document.getElementById("dropzone");
+    let dropZone;
 
     let dragging = null;
     let offsetX = 0;
@@ -17,7 +16,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let utensil;
     let active_utensil;
 
-    spawnNewUtensil();
+    let completed = false;
+
+    document.getElementById("start").addEventListener("click", () => {
+        spawnNewUtensil();
+        document.getElementById("start").remove();
+        let drop = document.createElement("div");
+        drop.innerHTML="Drop Here !";
+        drop.id = "dropzone";
+        document.body.appendChild(drop);
+        dropZone = drop;
+        const click = new Audio("../sounds/Koi.MP3");
+        click.play();
+    });
+
     function isColliding(a, b) {
         const rect1 = a.getBoundingClientRect();
         const rect2 = b.getBoundingClientRect();
@@ -60,41 +72,32 @@ document.addEventListener("DOMContentLoaded", () => {
         if(recipe[counter]== "plate"){
             newUtensil.style.pointerEvents = "none";
             utensil = active_utensil;
-            active_utensil.style.pointerEvents = "all";
+            utensil.style.pointerEvents = "all";
             dropZone.style.left = "0vh" ;
             dropZone.style.top = " 47vh";
-            utensil.addEventListener("mousedown", e => {
-                dragging = utensil;
-                const rect = utensil.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                utensil.style.cursor = `url("../image/grab.png"),auto`;
-                utensil.style.zIndex = 1000;
-            });
+            enableDrag(utensil);
         }
         else{
             utensil = document.getElementById(recipe[counter]);
-            newUtensil.addEventListener("mousedown", e => {
-                dragging = newUtensil;
-                const rect = newUtensil.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                newUtensil.style.cursor = `url("../image/grab.png"),auto`;
-                newUtensil.style.zIndex = 1000;
-            });
+            enableDrag(newUtensil);
         }
         
         
     }
 
-    utensil.addEventListener("mousedown", e => {
-        dragging = utensil;
-        const rect = utensil.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-        utensil.style.cursor = `url("../image/grab.png"),auto`;
-        utensil.style.zIndex = 1000;
-    });
+    function enableDrag(el) {
+        if(el.dataset.draggable) return;
+        el.dataset.draggable = "true";
+
+        el.addEventListener("mousedown", e => {
+            dragging = el;
+            const rect = el.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            el.style.cursor = `url("../image/grab.png"),auto`;
+            el.style.zIndex = 1000;
+        });
+    }
 
     document.addEventListener("mousemove", e => {
         if (!dragging) return;
@@ -103,8 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("mouseup", () => {
-        if(recipe[counter] == "done"){
-            snapToDrop(dragging, dropZone);
+        if (!dragging) return;
+
+        const release = dragging;
+
+        if(recipe[counter] == "done" && !completed){
+            completed = true;
+            snapToDrop(release, dropZone);
             setTimeout(() => {
                 dropZone.innerHTML = `
                     <h1>Stage Complete!!</h1>
@@ -118,10 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (!dragging) return;
-
-        if (isColliding(dragging, dropZone)) {
-            snapToDrop(dragging, dropZone);
+        if (isColliding(release, dropZone)) {
+            snapToDrop(release, dropZone);
             if(action[counter++] == "utensil"){
                 if(recipe[counter] == "done"){
                     dropZone.setAttribute("style", "left : 15vh; top : 15vh; width : 80% ; height : 80% ; border-radius: 15px; display : flex; flex-direction: column;");
@@ -131,14 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     let newUtensil = document.getElementById("plate");
                     newUtensil.style.pointerEvents ="all";
                     newUtensil.innerHTML = "<img src='../image/plate_fried_rice.png'>";
-                    newUtensil.addEventListener("mousedown", e => {
-                        dragging = newUtensil;
-                        const rect = newUtensil.getBoundingClientRect();
-                        offsetX = e.clientX - rect.left;
-                        offsetY = e.clientY - rect.top;
-                        newUtensil.style.cursor = `url("../image/grab.png"),auto`;
-                        newUtensil.style.zIndex = 1000;
-                    });
+                    enableDrag(newUtensil);
                 }
                 dragging.classList.remove("utensils");
                 dragging.classList.add("done");
@@ -146,14 +145,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 
             }
             else{
-                dragging.style.display = "none";
                 stage++;
-
                 active_utensil.innerHTML ="";
                 dragging.remove();
 
                 const newpan = document.createElement("img");
                 newpan.src = `../image/${pan_stage[stage]}.png`;
+                newpan.style.pointerEvents = "none";
                 active_utensil.appendChild(newpan);
             }
             
