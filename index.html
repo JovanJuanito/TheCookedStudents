@@ -16,20 +16,15 @@
 
         <div class="menu_table" role="region" aria-label="Main menu">
             <div class="menu_header">
-                <h1>What would you like</h1>
+                <h1>What would you like to make today?</h1>
             </div>
             <div class="menu_body">
                 <div class="menu1"><a href="menu1/menu1.html"><img src="image/frying_pan_fried_rice.png" alt="Fried Rice" /></a></div>
                 <div class="menu2"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 2" /></a></div>
-                <div class="menu1"><img src="image/wave.png" alt="Menu 3" /></div>
-                <div class="menu2"><img src="image/wave.png" alt="Menu 4" /></div>
-                <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 5" /></a></div>
-                <div class="menu3"><img src="image/wave.png" alt="Menu 6" /></div>
-                <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 7" /></a></div>
-                <div class="menu4"><img src="image/wave.png" alt="Menu 8" /></div>
-                <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 9" /></a></div>
-                <div class="menu5"><img src="image/wave.png" alt="Menu 10" /></div>
-                <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 11" /></a></div>
+                <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 3" /></a></div>
+                <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 4" /></a></div>
+                <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 5" /></a></div>
+                <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 6" /></a></div>
             </div>
         </div>
     </section>
@@ -47,24 +42,12 @@
     </div>
 
 <script>
+
+    window.addEventListener("click", () => {const click = new Audio("sounds/Click_Sound_Effect.mp3"); click.play(); });
     // Toggle gif and audio on cute_thing click
     const cuteThing = document.getElementById('cute_thing');
     const koiAudio = document.getElementById('koi_audio');
-    let isPlaying = false;
-
-    if (cuteThing && koiAudio) {
-        cuteThing.addEventListener('click', () => {
-            if (isPlaying) {
-                koiAudio.pause();
-                koiAudio.currentTime = 0;
-                isPlaying = false;
-            } else {
-                koiAudio.play().catch(err => console.warn(err));
-                isPlaying = true;
-            }
-        });
-    }
-
+    
     // login + save to backend
     const startBtn = document.getElementById('start_button');
     const usernameInput = document.getElementById('username_id');
@@ -74,6 +57,9 @@
         console.error("Missing start button or username input");
     } else {
         startBtn.addEventListener('click', async () => {
+
+            koiAudio.play();
+
             const username = usernameInput.value.trim();
             const Time = new Date().toLocaleString();
             console.log(`Username: ${username}, Time: ${Time}`);
@@ -136,6 +122,8 @@
             movableWindow.classList.remove('dragging');
         });
     }
+
+    
 </script>
 </body>
 </html>
