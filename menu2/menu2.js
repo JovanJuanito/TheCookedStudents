@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ((e.clientY - offsetY) / window.innerHeight * 100) + "vh";
     });
 
-    document.addEventListener("mouseup", () => {
+    document.addEventListener("mouseup", async () => {
         if (!dragging) return;
 
         const released = dragging;
@@ -195,13 +195,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
             snapToDrop(released, dropZone);
 
+            // Fetch user data & Save Score
+            let username = "Guest";
+            const timeTaken = ((Date.now() - timer) / 1000).toFixed(2);
+
+            try {
+                // 1. Get current username
+                const res = await fetch("/userLogin.json");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        username = data[data.length - 1].username;
+                    }
+                }
+
+                // 2. Save Score
+                await fetch("/score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: username,
+                        score: parseFloat(timeTaken),
+                        type: "Burger & Fries"
+                    })
+                });
+
+            } catch (e) {
+                console.error("Error saving score:", e);
+            }
+
             setTimeout(() => {
                 dropZone.innerHTML = `
-                    <h1>Stage Complete!!</h1>
-                    <h2>Completion time: ${(Date.now() - timer) / 1000}</h2>
-                    <a href="../index.html">
-                        <button>Press to go back to main page</button>
-                    </a>
+                    <div style="text-align: center; font-family: 'Segoe UI', sans-serif;">
+                        <h1 style="color: #333; margin-bottom: 10px;">Stage Complete!!</h1>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 20px auto; max-width: 300px;">
+                            <h3 style="color: #ff6b6b; margin: 0 0 10px 0;">Scoreboard</h3>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
+                                <span>Player:</span>
+                                <span style="color: #333;">${username}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
+                                <span>Dish:</span>
+                                <span style="color: #333;">Burger & Fries</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-weight: bold; color: #555;">
+                                <span>Time:</span>
+                                <span style="color: #333;">${timeTaken}s</span>
+                            </div>
+                        </div>
+
+                        <a href="../index.html" style="text-decoration: none;">
+                            <button type="button" style="
+                                padding: 12px 24px;
+                                background: #4ecdc4;
+                                color: white;
+                                border: none;
+                                border-radius: 25px;
+                                font-size: 1.1rem;
+                                font-weight: bold;
+                                cursor: pointer;
+                                transition: transform 0.2s;
+                                box-shadow: 0 4px 10px rgba(78, 205, 196, 0.4);
+                            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                Back to Kitchen
+                            </button>
+                        </a>
+                    </div>
                 `;
             }, 40);
 
