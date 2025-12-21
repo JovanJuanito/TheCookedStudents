@@ -13,23 +13,65 @@
     </a>
     <audio id="koi_audio" src="sounds/Koi.MP3" loop></audio>
 
-    <section>
-        <div class="wave"></div>
+    <div class="recipe-container">
+        <h1>What would you like to make today?</h1>
+        
+        <div class="results-grid">
+            <!-- Fried Rice -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/frying_pan_fried_rice.png" alt="Fried Rice">
+                <div class="recipe-info">
+                    <h3>Fried Rice</h3>
+                    <p>Classic favorite!</p>
+                </div>
+            </a>
 
-        <div class="menu_table" role="region" aria-label="Main menu">
-            <div class="menu_header">
-                <h1>What would you like to make today?</h1>
-            </div>
-            <div class="menu_body">
-                <div class="menu1"><a href="menu1/menu1.html"><img src="image/frying_pan_fried_rice.png" alt="Fried Rice" /></a></div>
-                <div class="menu2"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 2" /></a></div>
-                <div class="menu3"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 3" /></a></div>
-                <div class="menu4"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 4" /></a></div>
-                <div class="menu5"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 5" /></a></div>
-                <div class="menu6"><a href="menu1/menu1.html"><img src="image/wave.png" alt="Menu 6" /></a></div>
-            </div>
+            <!-- Placeholder Menu 2 -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 2">
+                <div class="recipe-info">
+                    <h3>Menu Option 2</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </a>
+
+            <!-- Placeholder Menu 3 -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 3">
+                <div class="recipe-info">
+                    <h3>Menu Option 3</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </a>
+
+            <!-- Placeholder Menu 4 -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 4">
+                <div class="recipe-info">
+                    <h3>Menu Option 4</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </a>
+
+            <!-- Placeholder Menu 5 -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 5">
+                <div class="recipe-info">
+                    <h3>Menu Option 5</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </a>
+
+            <!-- Placeholder Menu 6 -->
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 6">
+                <div class="recipe-info">
+                    <h3>Menu Option 6</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </a>
         </div>
-    </section>
+    </div>
 
     <div class="movable_window" aria-label="Movable menu">
         <div class="menu_header small">
@@ -124,7 +166,6 @@
             movableWindow.classList.remove('dragging');
         });
     }
-
     
 </script>
 </body>
