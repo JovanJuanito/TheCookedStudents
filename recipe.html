@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder - The Cooked Students</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Recipe specific styles */
+        body {
+            background-color: #ffe4c4; /* Matching the warm tone */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-y: auto;
+        }
+
+        .recipe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border: 2px solid #000;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .search-box button {
+            padding: 1rem 2rem;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .search-box button:hover {
+            transform: scale(1.05);
+            background: #ff5252;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #eee;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .recipe-info {
+            padding: 1.5rem;
+        }
+
+        .recipe-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+
+        .recipe-info p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 20px;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .modal-header img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .ingredients-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .ingredient-item {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Kitchen</a>
+
+    <div class="recipe-container">
+        <h1>What's Cooking? 👨‍🍳</h1>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for a meal (e.g. Chicken, Pasta)...">
+            <button id="searchBtn">Search</button>
+            <button id="randomBtn" style="background: #4ecdc4; margin-left: 10px;">🎲 Random</button>
+        </div>
+
+        <div id="results" class="results-grid">
+            <!-- Results will populate here -->
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal-overlay" id="recipeModal">
+        <div class="modal">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-content" id="modalContent">
+                <!-- Recipe details will go here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "https://www.themealdb.com/api/json/v1/1";
+
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const resultsDiv = document.getElementById('results');
+        const modal = document.getElementById('recipeModal');
+        const modalContent = document.getElementById('modalContent');
+        const clickSound = new Audio("sounds/Click_Sound_Effect.mp3");
+
+        function playClick() {
+            // Optional: Clone to allow overlapping sounds
+            clickSound.cloneNode(true).play().catch(() => {});
+        }
+
+        // Search Recipe
+        async function searchRecipes() {
+            playClick();
+            const term = searchInput.value.trim();
+            if (!term) return;
+
+            resultsDiv.innerHTML = '<p style="text-align:center; width:100%;">Searching...</p>';
+
+            try {
+                const res = await fetch(`${API_BASE}/search.php?s=${term}`);
+                const data = await res.json();
+                displayResults(data.meals);
+            } catch (err) {
+                console.error(err);
+                resultsDiv.innerHTML = '<p>Error fetching recipes. Try again!</p>';
+            }
+        }
+
+        // Random Recipe
+        async function getRandomRecipe() {
+            playClick();
+            resultsDiv.innerHTML = '<p style="text-align:center; width:100%;">Fetching random yumminess...</p>';
+
+            try {
+                const res = await fetch(`${API_BASE}/random.php`);
+                const data = await res.json();
+                displayResults(data.meals);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Display Cards
+        function displayResults(meals) {
+            resultsDiv.innerHTML = '';
+            
+            if (!meals) {
+                resultsDiv.innerHTML = '<p>No meals found. Try a different term!</p>';
+                return;
+            }
+
+            meals.forEach(meal => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.innerHTML = `
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    <div class="recipe-info">
+                        <h3>${meal.strMeal}</h3>
+                        <p>📍 ${meal.strArea} | 🏷️ ${meal.strCategory}</p>
+                    </div>
+                `;
+                card.onclick = () => showDetails(meal.idMeal);
+                resultsDiv.appendChild(card);
+            });
+        }
+
+        // Show Modal with Details
+        async function showDetails(id) {
+            playClick();
+            try {
+                const res = await fetch(`${API_BASE}/lookup.php?i=${id}`);
+                const data = await res.json();
+                const meal = data.meals[0];
+
+                // Get ingredients
+                let ingredients = [];
+                for(let i=1; i<=20; i++) {
+                    if(meal[`strIngredient${i}`]) {
+                        ingredients.push(`${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}`);
+                    }
+                }
+
+                modalContent.innerHTML = `
+                    <div class="modal-header">
+                        <h2>${meal.strMeal}</h2>
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    </div>
+                    <div>
+                        <h3>Ingredients:</h3>
+                        <div class="ingredients-list">
+                            ${ingredients.map(ing => `<div class="ingredient-item">🔹 ${ing}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Instructions:</h3>
+                        <p style="white-space: pre-line; line-height: 1.6;">${meal.strInstructions}</p>
+                    </div>
+                    ${meal.strYoutube ? `
+                        <div style="margin-top:20px;">
+                            <a href="${meal.strYoutube}" target="_blank" style="padding:10px 20px; background:#ff0000; color:white; text-decoration:none; border-radius:5px;">🎥 Watch on YouTube</a>
+                        </div>
+                    ` : ''}
+                `;
+
+                modal.style.display = 'flex';
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Close Modal
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        searchBtn.addEventListener('click', searchRecipes);
+        randomBtn.addEventListener('click', getRandomRecipe);
+        
+        // Enter key to search
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchRecipes();
+        });
+
+    </script>
+</body>
+</html>
