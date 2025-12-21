@@ -213,7 +213,84 @@
             cursor: grabbing;
         }
 
+/* ... existing styles ... */
         @keyframes waving {
             0% { background-position-x: 0px; }
             100% { background-position-x: 1000px; }
         }
+
+        /* Styles from recipe.html */
+        body {
+            background-color: #ffe4c4; /* Matching the warm tone */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-y: auto;
+        }
+
+        .recipe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .recipe-container h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #eee;
+            animation: fadeIn 0.5s ease-out;
+            text-decoration: none; /* For anchor tags acting as cards */
+            color: inherit;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .recipe-info {
+            padding: 1.5rem;
+        }
+
+        .recipe-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 1.25rem;
+        }
+
+        .recipe-info p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
