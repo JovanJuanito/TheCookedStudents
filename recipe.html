@@ -205,7 +205,7 @@
     <a href="index.html" class="back-btn">← Back to Kitchen</a>
 
     <div class="recipe-container">
-        <h1>What's Cooking? 👨‍🍳</h1>
+        <h1>What's Cooking?</h1>
         
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Search for a meal (e.g. Chicken, Pasta)...">
@@ -249,6 +249,16 @@
             playClick();
             const term = searchInput.value.trim();
             if (!term) return;
+
+            // Easter Egg
+            if (term.toLowerCase() === "mama mia") {
+                resultsDiv.innerHTML = `
+                    <div style="width:100%; display:flex; justify-content:center;">
+                        <img src="https://media1.tenor.com/m/zpmHWuCVMHYAAAAC/italian-hand-peter-griffin.gif" alt="Mama Mia" style="border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+                    </div>
+                `;
+                return;
+            }
 
             resultsDiv.innerHTML = '<p style="text-align:center; width:100%;">Searching...</p>';
 
@@ -361,6 +371,12 @@
         // Enter key to search
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchRecipes();
+        });
+
+        // Default search
+        window.addEventListener('DOMContentLoaded', () => {
+            searchInput.value = "Mama Mia";
+            searchRecipes();
         });
 
     </script>
