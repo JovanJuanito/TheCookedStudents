@@ -27,11 +27,11 @@
             </a>
 
             <!-- Placeholder Menu 2 -->
-            <a href="menu2/menu2.html" class="recipe-card">
-                <img src="image/plate_burger_fries.png" alt="Menu 2">
+            <a href="menu1/menu1.html" class="recipe-card">
+                <img src="image/wave.png" alt="Menu 2">
                 <div class="recipe-info">
                     <h3>Menu Option 2</h3>
-                    <p>Everyone love it</p>
+                    <p>Coming Soon</p>
                 </div>
             </a>
 
@@ -80,7 +80,51 @@
         <div class="menu_body small">
             <div class="login">
                 <input type="text" placeholder="Username" id="username_id" />
-                <input type="button" value="Start" id="start_button" />
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <input type="button" value="Start" id="start_button" style="flex: 1;" />
+                    <input type="button" value="🏆 Scores" id="score_button" style="flex: 1; background: #ffbd2e;" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoreboard Modal -->
+    <div id="score_modal" style="
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    ">
+        <div style="
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        ">
+            <span id="close_score" style="
+                position: absolute;
+                top: 15px; right: 20px;
+                font-size: 24px;
+                cursor: pointer;
+                font-weight: bold;
+                color: #888;
+            ">&times;</span>
+            
+            <h2 style="margin-bottom: 20px; color: #333;">🏆 Global Scoreboard</h2>
+            
+            <div id="score_list" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Scores will be injected here -->
+                <p>Loading...</p>
             </div>
         </div>
     </div>
@@ -164,6 +208,69 @@
         document.addEventListener('mouseup', () => {
             isDragging = false;
             movableWindow.classList.remove('dragging');
+        });
+    }
+
+    // Scoreboard Logic
+    const scoreBtn = document.getElementById('score_button');
+    const scoreModal = document.getElementById('score_modal');
+    const closeScore = document.getElementById('close_score');
+    const scoreList = document.getElementById('score_list');
+
+    if (scoreBtn && scoreModal) {
+        scoreBtn.addEventListener('click', async () => {
+            scoreModal.style.display = 'flex';
+            scoreList.innerHTML = '<p>Loading scores...</p>';
+
+            try {
+                const res = await fetch('/userLogin.json');
+                if (res.ok) {
+                    const data = await res.json();
+                    
+                    // Filter users who have a score
+                    const scoredUsers = data.filter(u => u.score !== undefined);
+                    
+                    // Sort by score (asc) then date (desc)
+                    scoredUsers.sort((a, b) => (a.score - b.score) || new Date(b.time) - new Date(a.time));
+
+                    if (scoredUsers.length === 0) {
+                        scoreList.innerHTML = '<p>No scores yet! Be the first!</p>';
+                        return;
+                    }
+
+                    scoreList.innerHTML = scoredUsers.map((u, i) => `
+                        <div style="
+                            display: flex; justify-content: space-between; align-items: center;
+                            padding: 10px; background: #f8f9fa; border-radius: 8px;
+                            border: 1px solid #eee;
+                        ">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-weight: bold; color: #ff6b6b; width: 20px;">#${i+1}</span>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: bold; color: #333;">${u.username}</div>
+                                    <div style="font-size: 0.8rem; color: #666;">${u.type || 'Unknown'}</div>
+                                </div>
+                            </div>
+                            <div style="font-weight: bold; color: #4ecdc4;">${u.score}s</div>
+                        </div>
+                    `).join('');
+                } else {
+                    scoreList.innerHTML = '<p>Failed to load scores.</p>';
+                }
+            } catch (e) {
+                console.error(e);
+                scoreList.innerHTML = '<p>Error loading scores.</p>';
+            }
+        });
+
+        closeScore.addEventListener('click', () => {
+            scoreModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === scoreModal) {
+                scoreModal.style.display = 'none';
+            }
         });
     }
     
