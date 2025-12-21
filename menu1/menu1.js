@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     let date = new Date();
-    let timer = date.getTime();
+    let timer;
     const recipe = ["frying_pan","oil" ,"diced_onion", "egg", "rice" ,"soy_sauce" ,"salt","spoon","plate","done"];
     const action = ["utensil", "ingredient", "ingredient","ingredient","ingredient","ingredient","ingredient","act","utensil"];
     const pan_stage = ["frying_pan","frying_pan_oil","frying_pan_onion","frying_pan_egg","frying_pan_rice","frying_pan_soy_sauce","frying_pan_soy_sauce","frying_pan_fried_rice"];
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let completed = false;
 
     document.getElementById("start").addEventListener("click", () => {
+        timer = date.getTime();
         spawnNewUtensil();
         document.getElementById("start").remove();
         let drop = document.createElement("div");
@@ -166,3 +167,4 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mousedown", () => {const click = new Audio("../sounds/Click_Sound_Effect.mp3"); click.play(); });
 
 });
+
