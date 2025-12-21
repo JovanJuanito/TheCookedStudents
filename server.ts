@@ -126,6 +126,62 @@ async function handler(req: Request): Promise<Response> {
     }
   }
 
+  // POST /score — update user score and time
+  if (url.pathname === "/score" && req.method === "POST") {
+    try {
+      let body;
+      try {
+        body = await req.json();
+      } catch (e) {
+        return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers: corsHeaders });
+      }
+
+      const { username, score, type } = body;
+      if (!username) {
+        return new Response(JSON.stringify({ error: "Username required" }), { status: 400, headers: corsHeaders });
+      }
+
+      let fileContent = "[]";
+      try {
+        fileContent = await Deno.readTextFile(JSON_FILE);
+      } catch { }
+
+      let userData = [];
+      try {
+        userData = JSON.parse(fileContent);
+        if (!Array.isArray(userData)) userData = [];
+      } catch {
+        userData = [];
+      }
+
+      const entryIndex = userData.findIndex(u => u.username === username);
+      const newEntry = {
+        username,
+        score: score || 0,
+        type: type || "Unknown",
+        time: new Date().toLocaleString()
+      };
+
+      if (entryIndex !== -1) {
+        userData[entryIndex] = newEntry;
+        console.log("✓ Updated Score:", newEntry);
+      } else {
+        userData.push(newEntry);
+        console.log("✓ Added Score:", newEntry);
+      }
+
+      await Deno.writeTextFile(JSON_FILE, JSON.stringify(userData, null, 2));
+
+      return new Response(JSON.stringify({ status: "OK", data: newEntry }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+
+    } catch (err) {
+      console.error("Score update error:", err);
+      return new Response(JSON.stringify({ error: "Internal Error" }), { status: 500, headers: corsHeaders });
+    }
+  }
+
   // Serve static files
   const filePath = url.pathname === "/" ? "./index.html" : `.${url.pathname}`;
 
@@ -146,3 +202,4 @@ async function handler(req: Request): Promise<Response> {
 
 console.log("🦕 Deno server running on http://localhost:8000");
 Deno.serve({ port: 8000 }, handler);
+
