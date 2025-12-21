@@ -1,5 +1,5 @@
+
 // server.ts
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 
 const JSON_FILE = "./userLogin.json";
 
@@ -42,7 +42,17 @@ async function handler(req: Request): Promise<Response> {
   // POST /login — save or update user login
   if (url.pathname === "/login" && req.method === "POST") {
     try {
-      const body = await req.json();
+      let body;
+      try {
+        body = await req.json();
+      } catch (e) {
+        console.error("Invalid JSON body:", e);
+        return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       const username = typeof body.username === "string" ? body.username.trim() : "";
 
       if (!username) {
@@ -53,8 +63,24 @@ async function handler(req: Request): Promise<Response> {
       }
 
       // Read existing logins
-      const fileContent = await Deno.readTextFile(JSON_FILE);
-      const userData: Array<{ username: string; time: string }> = JSON.parse(fileContent);
+      let fileContent = "[]";
+      try {
+        fileContent = await Deno.readTextFile(JSON_FILE);
+      } catch (err) {
+        console.warn("Could not read JSON file, starting with empty array.", err);
+      }
+
+      let userData: Array<{ username: string; time: string }>;
+      try {
+        userData = JSON.parse(fileContent);
+        if (!Array.isArray(userData)) {
+          console.warn("JSON file did not contain an array, resetting.");
+          userData = [];
+        }
+      } catch (e) {
+        console.warn("JSON parse error, resetting to empty array.", e);
+        userData = [];
+      }
 
       const newEntry = {
         username,
@@ -73,7 +99,12 @@ async function handler(req: Request): Promise<Response> {
       }
 
       // Write back
-      await Deno.writeTextFile(JSON_FILE, JSON.stringify(userData, null, 2));
+      try {
+        await Deno.writeTextFile(JSON_FILE, JSON.stringify(userData, null, 2));
+      } catch (writeErr) {
+        console.error("Failed to write to JSON file:", writeErr);
+        throw writeErr;
+      }
 
       return new Response(
         JSON.stringify({
@@ -114,4 +145,4 @@ async function handler(req: Request): Promise<Response> {
 }
 
 console.log("🦕 Deno server running on http://localhost:8000");
-await serve(handler, { port: 8000 });
+Deno.serve({ port: 8000 }, handler);
