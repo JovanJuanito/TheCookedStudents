@@ -5,3 +5,6 @@ but must download deno in powershell admin
 if download use this bash*/
 
 irm https://deno.land/install.ps1 | iex
+
+https://docs.google.com/presentation/d/1Qr4swb_w0VvtLwbXug58Pu40JekTE2q1SeCKDdmUr9E/edit?slide=id.g3b2ed266165_2_0#slide=id.g3b2ed266165_2_0
+https://isomorphous-uninvidiously-emerita.ngrok-free.dev/TheCookedStudents-main/index.html
