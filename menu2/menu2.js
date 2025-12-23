@@ -199,9 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
             let username = "Guest";
             const timeTaken = ((Date.now() - timer) / 1000).toFixed(2);
 
-            try {
-                // 1. Get current username
-                const res = await fetch("/userLogin.json");
+           try {
+                const res = await fetch(
+                    "/userLogin.json"
+                );
+
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0) {
@@ -209,19 +211,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // 2. Save Score
-                await fetch("/score", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        username: username,
-                        score: parseFloat(timeTaken),
-                        type: "Burger & Fries"
-                    })
-                });
+                await fetch(
+                    "/saveScore.php",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            username,
+                            score: parseFloat(timeTaken),
+                            type: "Burger & Fries"
+                        })
+                    }
+                );
 
             } catch (e) {
-                console.error("Error saving score:", e);
+                console.error("Save failed:", e);
             }
 
             setTimeout(() => {
