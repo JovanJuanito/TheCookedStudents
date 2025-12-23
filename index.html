@@ -190,7 +190,7 @@
 
     // make movable window draggable
     if (movableWindow) {
-        const menu_header = movableWindow.querySelector('.menu_header.small');
+        const menu_header = movableWindow.querySelector('.menu_header');
         let offsetX = 0;
         let offsetY = 0;
         let isDragging = false;
@@ -198,24 +198,44 @@
         if (menu_header) {
             menu_header.addEventListener('mousedown', (e) => {
                 isDragging = true;
+                
+                // Get current visual position BEFORE removing transform
                 const r = movableWindow.getBoundingClientRect();
+                
+                // Disable transition to prevent lag/sliding
+                movableWindow.style.transition = 'none';
+
+                // Remove transform (which centers it) and set absolute top/left
+                // to match the current visual position exactly.
+                movableWindow.style.transform = 'none';
+                movableWindow.style.left = r.left + 'px';
+                movableWindow.style.top = r.top + 'px';
+
+                // Calculate offset relative to the window's top-left
                 offsetX = e.clientX - r.left;
                 offsetY = e.clientY - r.top;
+                
                 movableWindow.classList.add('dragging');
             });
         }
 
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                movableWindow.style.left = e.clientX - offsetX + 'px';
-                movableWindow.style.top = e.clientY - offsetY + 'px';
-                movableWindow.style.transform = 'none';
-            }
+        document.addEventListener("mousemove", e => {
+            if (!isDragging) return;
+            e.preventDefault(); // Prevent text selection
+
+            // Update position in pixels
+            movableWindow.style.left = (e.clientX - offsetX) + "px";
+            movableWindow.style.top = (e.clientY - offsetY) + "px";
         });
 
         document.addEventListener('mouseup', () => {
-            isDragging = false;
-            movableWindow.classList.remove('dragging');
+            if (isDragging) {
+                isDragging = false;
+                movableWindow.classList.remove('dragging');
+                
+                // Optional: restore transition for future fades, but keep transform: none
+                movableWindow.style.transition = ''; 
+            }
         });
     }
 
