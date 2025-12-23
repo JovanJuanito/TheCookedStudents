@@ -1,32 +1,3 @@
 [
-    {
-        "username": "hello",
-        "score": 5.4,
-        "type": "Burger & Fries",
-        "time": "2025-12-23T07:23:15+01:00"
-    },
-    {
-        "username": "hello",
-        "score": 4.81,
-        "type": "Burger & Fries",
-        "time": "2025-12-23T07:27:10+01:00"
-    },
-    {
-        "username": "Jovan",
-        "score": 6.21,
-        "type": "Burger & Fries",
-        "time": "2025-12-23T07:31:00+01:00"
-    },
-    {
-        "username": "Jovan",
-        "score": 5.89,
-        "type": "Fried Rice",
-        "time": "2025-12-23T07:31:24+01:00"
-    },
-    {
-        "username": "hrllo",
-        "score": 5.65,
-        "type": "Fried Rice",
-        "time": "2025-12-23T07:31:40+01:00"
-    }
+    
 ]
