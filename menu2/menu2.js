@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function spawnNewUtensil() {
 
         if (recipe[counter] === "plating") {
-            dropZone.style.left = "0vh";
+            dropZone.style.left = "0vw";
             dropZone.style.top = "47vh";
             return;
         }
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newUtensil = document.createElement("div");
         newUtensil.className = "utensils";
         newUtensil.id = recipe[counter];
-        newUtensil.style.left = "0vh";
+        newUtensil.style.left = "0vw";
         newUtensil.style.top = "47vh";
 
         newUtensil.innerHTML =
@@ -225,48 +225,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
             } catch (e) {
-                console.error("Save failed:", e);
+                console.log("Running in offline mode - score not saved");
             }
 
             setTimeout(() => {
-                dropZone.innerHTML = `
-                    <div style="text-align: center; font-family: 'Segoe UI', sans-serif;">
-                        <h1 style="color: #333; margin-bottom: 10px;">Stage Complete!!</h1>
-                        
-                        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 20px auto; max-width: 300px;">
-                            <h3 style="color: #ff6b6b; margin: 0 0 10px 0;">Scoreboard</h3>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
-                                <span>Player:</span>
-                                <span style="color: #333;">${username}</span>
+                // Remove dropzone entirely or clear it for the modal
+                dropZone.style.display = 'none';
+
+                const modal = document.createElement('div');
+                modal.className = 'success-modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h1>Stage Complete!</h1>
+                        <div class="score-card">
+                            <div class="score-row">
+                                <span>Player</span>
+                                <span class="score-val">${username}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
-                                <span>Dish:</span>
-                                <span style="color: #333;">Burger & Fries</span>
+                            <div class="score-row">
+                                <span>Dish</span>
+                                <span class="score-val">Burger & Fries</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-weight: bold; color: #555;">
-                                <span>Time:</span>
-                                <span style="color: #333;">${timeTaken}s</span>
+                            <div class="score-row">
+                                <span>Time</span>
+                                <span class="score-val">${timeTaken}s</span>
                             </div>
                         </div>
-
-                        <a href="../index.html" style="text-decoration: none;">
-                            <button type="button" style="
-                                padding: 12px 24px;
-                                background: #4ecdc4;
-                                color: white;
-                                border: none;
-                                border-radius: 25px;
-                                font-size: 1.1rem;
-                                font-weight: bold;
-                                cursor: pointer;
-                                transition: transform 0.2s;
-                                box-shadow: 0 4px 10px rgba(78, 205, 196, 0.4);
-                            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                Back to Kitchen
-                            </button>
+                        <a href="../index.html" class="btn-kitchen">
+                            Back to Kitchen
                         </a>
                     </div>
                 `;
+                document.body.appendChild(modal);
             }, 40);
 
             released.remove();
@@ -281,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (recipe[counter] === "done") {
                     dropZone.setAttribute(
                         "style",
-                        "left:15vh; top:15vh; width:80%; height:80%; border-radius:15px; display:flex; flex-direction:column;"
+                        "left:15vw; top:15vh; width:80%; height:80%; border-radius:15px; display:flex; flex-direction:column;"
                     );
 
                     dropZone.innerHTML = "Serve";
@@ -301,6 +291,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     released.classList.remove("utensils");
                     released.classList.add("done");
                     active_utensil = utensil;
+
+                    // === SPECIFIC REQUEST: Drop Zone Transparency ===
+                    // When oil is added (or rather, just after pan is placed? Wait. "first interaction with frying_pan or pot")
+                    // In the recipe list: "frying_pan", "oil".
+                    // This block executes when "oil" is the CURRENT required item, meaning PAN was just successfully placed.
+                    // Wait, no. When `frying_pan` is dragging, `counter` is 0. 
+                    // `action[0]` is 'utensil'.
+                    // It enters `if (action... == 'utensil')`.
+                    // It checks `recipe[1]` (since counter++ happened). `recipe[1]` is 'oil'.
+                    // So it enters THIS block when the pan is placed.
+                    
+                    dropZone.classList.add("cooking-active");
+                    dropZone.innerText = "";
                 }
 
                 else if (recipe[counter] === "fries") {
@@ -350,15 +353,16 @@ document.addEventListener("DOMContentLoaded", () => {
     ======================= */
 
     document.getElementById("start").addEventListener("click", () => {
-
         timer = Date.now();
-
-        new Audio("../sounds/Koi.MP3").play();
-        document.getElementById("start").remove();
+        
+        // Use CSS class for transition instead of removing
+        const startOverlay = document.getElementById("start");
+        startOverlay.style.opacity = "0";
+        setTimeout(() => startOverlay.remove(), 500);
 
         const drop = document.createElement("div");
+        drop.innerText = "Drop Here!"; // Changed from innerHTML to innerText for font control
         drop.id = "dropzone";
-        drop.innerHTML = "Drop Here !";
 
         document.body.appendChild(drop);
         dropZone = drop;
@@ -367,7 +371,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.addEventListener("mousedown", () => {
-        new Audio("../sounds/Click_Sound_Effect.mp3").play();
+        try {
+            new Audio("../sounds/Click_Sound_Effect.mp3").play();
+        } catch (e) {
+            // Audio file not found, continue without sound
+        }
     });
 
 });
