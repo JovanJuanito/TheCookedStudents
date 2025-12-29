@@ -21,14 +21,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("start").addEventListener("click", () => {
         timer = date.getTime();
         spawnNewUtensil();
-        document.getElementById("start").remove();
+        
+        // Use CSS class for transition instead of removing
+        const startOverlay = document.getElementById("start");
+        startOverlay.style.opacity = "0";
+        setTimeout(() => startOverlay.remove(), 500);
+        
+        // Create Dropzone with new class
         let drop = document.createElement("div");
-        drop.innerHTML = "Drop Here !";
+        drop.innerText = "Drop Here!";
         drop.id = "dropzone";
+        // drop.className = "fade-in"; // Optional animation class
         document.body.appendChild(drop);
         dropZone = drop;
-        const click = new Audio("../sounds/Koi.MP3");
-        click.play();
     });
 
     function isColliding(a, b) {
@@ -149,43 +154,34 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             setTimeout(() => {
-                dropZone.innerHTML = `
-                    <div style="text-align: center; font-family: 'Segoe UI', sans-serif;">
-                        <h1 style="color: #333; margin-bottom: 10px;">Stage Complete!!</h1>
-                        
-                        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 20px auto; max-width: 300px;">
-                            <h3 style="color: #ff6b6b; margin: 0 0 10px 0;">Scoreboard</h3>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
-                                <span>Player:</span>
-                                <span style="color: #333;">${username}</span>
+                // Remove dropzone entirely or clear it for the modal
+                dropZone.style.display = 'none';
+
+                const modal = document.createElement('div');
+                modal.className = 'success-modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h1>Stage Complete!</h1>
+                        <div class="score-card">
+                            <div class="score-row">
+                                <span>Player</span>
+                                <span class="score-val">${username}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
-                                <span>Dish:</span>
-                                <span style="color: #333;">Fried Rice</span>
+                            <div class="score-row">
+                                <span>Dish</span>
+                                <span class="score-val">Fried Rice</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-weight: bold; color: #555;">
-                                <span>Time:</span>
-                                <span style="color: #333;">${timeTaken}s</span>
+                            <div class="score-row">
+                                <span>Time</span>
+                                <span class="score-val">${timeTaken}s</span>
                             </div>
                         </div>
-
-                        <a href="../index.html" style="text-decoration: none;">
-                            <button type="button" style="
-                                padding: 12px 24px;
-                                background: #4ecdc4;
-                                color: white;
-                                border: none;
-                                border-radius: 25px;
-                                font-size: 1.1rem;
-                                font-weight: bold;
-                                cursor: pointer;
-                                transition: transform 0.2s;
-                                box-shadow: 0 4px 10px rgba(78, 205, 196, 0.4);
-                            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                Back to Kitchen
-                            </button>
+                        <a href="../index.html" class="btn-kitchen">
+                            Back to Kitchen
                         </a>
-                    </div>`;
+                    </div>
+                `;
+                document.body.appendChild(modal);
             }, 40);
 
             dragging.remove();
@@ -209,9 +205,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 dragging.classList.add("done");
                 active_utensil = utensil;
 
+
             }
             else {
                 stage++;
+                
+                // === SPECIFIC REQUEST: Drop Zone Transparency ===
+                // If the first tool (pan) is placed, fade the drop zone
+                if (stage === 1) { // 0 -> 1 means first pan placed
+                    dropZone.classList.add("cooking-active");
+                    dropZone.innerText = ""; /* Remove text so it's just a faint circle */
+                }
+
                 active_utensil.innerHTML = "";
                 dragging.remove();
 
